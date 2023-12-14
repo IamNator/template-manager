@@ -18,6 +18,7 @@ func (s server) Listen(port string) error {
 
 	// Setup route for the API health check
 	app.Get("/api/health", health)
+	app.Get("/api/stats", stats)
 
 	// Define API endpoints for managing keys
 	app.Post("/api/key", addKey)
@@ -42,5 +43,13 @@ func (s server) Listen(port string) error {
 func health(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
+	})
+}
+
+func stats(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"grpc":    true,
+		"version": "v1.0.0",
+		"open":    false, // open source version
 	})
 }
