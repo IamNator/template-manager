@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage API Keys</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+
+        .api-keys-container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .api-key-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .api-key-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .api-key-item:last-child {
+            border-bottom: none;
+        }
+
+        .api-key-label {
+            flex: 1;
+        }
+
+        .api-key-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-button {
+            padding: 6px 12px;
+            border: 1px solid #ff6347;
+            border-radius: 4px;
+            background-color: #ff6347;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: #ff4136;
+            border-color: #ff4136;
+        }
+    </style>
+</head>
+<body>
+    <div class="api-keys-container">
+        <h1>Manage API Keys</h1>
+        <button onclick="createAPIKey()" class="create-button">Add API Key</button>
+        <ul class="api-key-list">
+            <li class="api-key-item">
+                <span class="api-key-label">API Key 1</span>
+                <div class="api-key-actions">
+                    <button class="delete-button">Delete</button>
+                </div>
+            </li>
+            <li class="api-key-item">
+                <span class="api-key-label">API Key 2</span>
+                <div class="api-key-actions">
+                    <button class="delete-button">Delete</button>
+                </div>
+            </li>
+            <!-- Add more API keys and their delete buttons here -->
+        </ul>
+    </div>
+    <script>
+        function createAPIKey() {
+            // Logic to create a new API key
+            // You might want to redirect the user to a page to create a new API key
+            // Or perform an action to generate a new key
+            alert('Create a new API key functionality here.');
+        }
+    </script>
+</body>
+</html>

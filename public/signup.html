@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Template Manager - Signup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            text-align: center;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .login-form input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .login-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        .verification-message {
+            /* display: none; */
+            position: fixed;
+            top: 24%;
+            right: 24%;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            transition: 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Sign Up for Message Template Manager</h2>
+        <form class="signup-form" id="signupForm">
+            <input type="email" id="email" placeholder="Email" required>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+
+    <!-- Email Verification Modal -->
+    <div class="verification-modal" id="verificationModal">
+        <div class="verification-content">
+            <div class="verification-message" >
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Sent Email Verification</h3>
+                <p>An email with verification instructions has been sent to your email address. Please verify to proceed.</p>
+            </div>
+            
+            <!-- Additional content or form for email verification -->
+        </div>
+    </div>
+
+    <script>
+        // JavaScript logic here for form submission, email verification, etc.
+        function closeModal() {
+            document.getElementById('verificationModal').style.display = 'none';
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            // Here, you can perform form validation and send data to the server for email verification
+            // You'll need backend scripting to handle email verification logic and sending emails
+            // Upon successful verification, display the verification modal
+            document.getElementById('verificationModal').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
