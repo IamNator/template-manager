@@ -3,7 +3,10 @@ package grpc
 import (
 	"context"
 	"log"
+	"net"
 	"time"
+
+	grpc "google.golang.org/grpc"
 )
 
 type server struct {
@@ -45,7 +48,13 @@ func New() *server {
 // Run starts the gRPC server
 func (s server) Listen(port string) error {
 	log.Println("Starting gRPC server on port ", port)
-	ch := make(chan error)
-	<-ch
-	return nil
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	grpcServer := grpc.NewServer()
+	RegisterServiceServer(grpcServer, &s)
+	return grpcServer.Serve(lis)
+
 }
