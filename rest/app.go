@@ -1,10 +1,17 @@
-package app
+package rest
 
 import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Run() error {
+type server struct{}
+
+// New creates a new fiber app
+func New() *server {
+	return &server{}
+}
+
+func (s server) Listen(port string) error {
 	app := fiber.New()
 	// Serve static files from the "public" directory
 	app.Static("/", "./public")
@@ -29,7 +36,7 @@ func Run() error {
 	app.Put("/api/template/:id", updateTemplate)
 
 	// Start the server on port 8080
-	return app.Listen(":8080")
+	return app.Listen(port)
 }
 
 func health(c *fiber.Ctx) error {

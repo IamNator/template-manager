@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package templates;
+
+option go_package = "template-manager/grpc";
+
+service Service {
+    rpc Download(TemplateRequest) returns (Template);
+}
+
+message TemplateRequest {
+    string templateId = 1;
+    optional string version = 2;
+    map<string, string> vars = 3;
+}
+
+message Template {
+    bytes content = 1;
+    string name = 2;
+    string version = 3;
+    map<string, string> meta = 4;
+    string updated_at = 10;
+    string created_at = 15;
+}

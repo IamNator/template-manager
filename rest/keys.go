@@ -1,23 +1,20 @@
-package app
+package rest
 
 import "github.com/gofiber/fiber/v2"
 
-
-
-
-func login(c *fiber.Ctx) error {
+func addKey(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
 }
 
-func signup(c *fiber.Ctx) error {
+func getKey(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
 }
 
-func logout(c *fiber.Ctx) error {
+func deleteKey(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
