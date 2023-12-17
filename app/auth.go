@@ -70,6 +70,7 @@ func (a *App) Login(ctx context.Context, req dto.LoginRequest) (*dto.LoginRespon
 	if !acc.ComparePassword(req.Password) {
 		return nil, errors.New("invalid password")
 	}
+	
 	// return token
 	return &dto.LoginResponse{
 		Token: time.Now().Format(time.RFC3339Nano),

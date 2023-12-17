@@ -33,7 +33,7 @@ func (s server) Listen(port string) error {
 	app.Delete("/api/key/:id", deleteKey)
 
 	// Define API endpoints for managing users
-	app.Post("/api/user/login", login)
+	app.Post("/api/user/login", s.Login)
 	app.Post("/api/user/signup", s.Signup)
 	app.Post("/api/user/logout", logout)
 
