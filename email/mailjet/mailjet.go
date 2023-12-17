@@ -55,6 +55,7 @@ func (m *Mailjet) Send(ctx context.Context, id email.TemplateID, vars map[string
 	to := vars["to"].(string)
 	subject := vars["subject"].(string)
 	vars["company_email"] = m.from
+	vars["logo"] = "https://www.templafy.com/wp-content/uploads/2020/02/corporate-management-templafy.png"
 	return sendTemplateEmail(ctx, m.mj, templateIDMap[id], m.from, to, subject, vars)
 }
 
