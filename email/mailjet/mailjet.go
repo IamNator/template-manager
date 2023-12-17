@@ -81,9 +81,10 @@ func sendTemplateEmail(ctx context.Context, mailjetClient *mailjet.Client, templ
 					Name:  to,
 				},
 			},
-			Subject:    subject,
-			TemplateID: templateID,
-			Variables:  variables,
+			Subject:          subject,
+			TemplateID:       templateID,
+			Variables:        variables,
+			TemplateLanguage: true,
 		},
 	}
 	messages := mailjet.MessagesV31{Info: messagesInfo}
