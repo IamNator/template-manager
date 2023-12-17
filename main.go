@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
 
 	"template-manager/app"
 	"template-manager/config"
@@ -19,7 +20,7 @@ func main() {
 
 	conf := loadConfig()
 
-	mj := mailgun.New(conf.GetString("MAILJET_DOMAIN"), conf.GetString("MAILJET_APIKET"), conf.GetString("MAILJET_SENDER"))
+	mj := mailgun.New(conf.GetString("MAILJET_DOMAIN"), conf.GetString("MAILJET_APIKEY"), conf.GetString("MAILJET_SENDER"))
 
 	app := app.New(mj)
 
@@ -33,8 +34,11 @@ func main() {
 }
 
 func loadConfig() *config.Config {
+
 	conf := config.New().
-		SetEnv("", "")
+		SetEnv("MAILJET_DOMAIN", os.Getenv("MAILJET_DOMAIN")).
+		SetEnv("MAILJET_APIKEY", os.Getenv("MAILJET_APIKEY")).
+		SetEnv("MAILJET_SENDER", os.Getenv("MAILJET_SENDER"))
 
 	return conf
 }
