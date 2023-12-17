@@ -10,7 +10,8 @@ type LoginRequest struct {
 }
 
 type LogoutRequest struct {
-	Token string `json:"token"`
+	AccountID string `json:"account_id"`
+	Token     string `json:"token"`
 }
 
 type InitiateResetPasswordRequest struct {

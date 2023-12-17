@@ -4,26 +4,41 @@ import (
 	"context"
 	"errors"
 	"log/slog"
-	"time"
 
 	"gorm.io/gorm"
 
+	"template-manager/config"
 	"template-manager/dto"
 	"template-manager/email"
 	"template-manager/entity"
 )
 
-type App struct {
-	Email  email.Provider
-	logger *slog.Logger
-	db     *gorm.DB // TODO: replace with repository
+type SessionManager interface {
+	//create a session
+	Create(ctx context.Context, accountID string) (*entity.Session, error)
+	//verify a session
+	Verify(ctx context.Context, token string) (*entity.Session, error)
+	//delete a session
+	Expire(ctx context.Context, token string) error
+	//delete all sessions for an account
+	Delete(ctx context.Context, accountID string) error
 }
 
-func New(email email.Provider, logger *slog.Logger, db *gorm.DB) *App {
+type App struct {
+	config *config.Config
+	email  email.Provider
+	logger *slog.Logger
+	db     *gorm.DB // TODO: replace with repository
+	sess   SessionManager
+}
+
+func New(config *config.Config, email email.Provider, logger *slog.Logger, db *gorm.DB, sessionManager SessionManager) *App {
 	return &App{
-		Email:  email,
+		config: config,
+		email:  email,
 		db:     db,
 		logger: logger,
+		sess:   sessionManager,
 	}
 }
 
@@ -55,7 +70,7 @@ func (a *App) Signup(ctx context.Context, req dto.SignUpRequest) error {
 		"password":     randomPassword,
 		"company_name": "Template Manager",
 	}
-	if err := a.Email.Send(ctx, email.TemplateIDSignupVerification, vars); err != nil {
+	if err := a.email.Send(ctx, email.TemplateIDSignupVerification, vars); err != nil {
 		a.logger.ErrorContext(ctx, "failed to send email %+v", err)
 		return err
 	}
@@ -75,14 +90,23 @@ func (a *App) Login(ctx context.Context, req dto.LoginRequest) (*dto.LoginRespon
 		return nil, errors.New("invalid password")
 	}
 
+	// create session
+	sess, err := a.sess.Create(ctx, acc.ID)
+	if err != nil {
+		a.logger.ErrorContext(ctx, "failed to create session %+v", err)
+		return nil, err
+	}
+
 	// return token
 	return &dto.LoginResponse{
-		Token: time.Now().Format(time.RFC3339Nano),
+		Email:     acc.Email,
+		Token:     sess.Token,
+		ExpiresAt: sess.ExpiresAt,
 	}, nil
 }
 
 func (a *App) Logout(ctx context.Context, req dto.LogoutRequest) error {
-	return nil
+	return a.sess.Expire(ctx, req.Token)
 }
 
 func (a *App) InitiateResetPassword(ctx context.Context, req dto.InitiateResetPasswordRequest) error {
@@ -105,7 +129,7 @@ func (a *App) InitiateResetPassword(ctx context.Context, req dto.InitiateResetPa
 		"subject": "Welcome to Template Manager",
 		"body":    "Your password is " + randomPassword,
 	}
-	if err := a.Email.Send(ctx, email.TemplateIDSignupVerification, vars); err != nil {
+	if err := a.email.Send(ctx, email.TemplateIDSignupVerification, vars); err != nil {
 		a.logger.ErrorContext(ctx, "failed to send email %+v", err)
 		return err
 	}

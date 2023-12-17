@@ -5,6 +5,7 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"template-manager/app/session"
 	"template-manager/database"
 	"template-manager/email/mailjet"
 	"template-manager/entity"
@@ -29,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = db.Client.AutoMigrate(&entity.Account{}, entity.Key{})
+	err = db.Client.AutoMigrate(&entity.Account{}, entity.Key{}, entity.Session{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,8 +41,9 @@ func main() {
 		mailjet.WithName("template manager"),
 	)
 	logger := slog.New(&slog.JSONHandler{})
+	sessionManager := session.New(db.Client, conf, logger)
 
-	application := app.New(mj, logger, db.Client)
+	application := app.New(conf, mj, logger, db.Client, sessionManager)
 
 	if server == "grpc" {
 		grpcApp := grpc.New(conf)
@@ -59,7 +61,8 @@ func loadConfig() *config.Config {
 		SetEnv("MAILJET_PRIVATE_KEY", os.Getenv("MAILJET_PRIVATE_KEY")).
 		SetEnv("MAILJET_PUBLIC_KEY", os.Getenv("MAILJET_PUBLIC_KEY")).
 		SetEnv("MAILJET_DEFAULT_SENDER", os.Getenv("MAILJET_DEFAULT_SENDER")).
-		SetEnv("POSTGRES_DSN", os.Getenv("POSTGRES_DSN"))
+		SetEnv("POSTGRES_DSN", os.Getenv("POSTGRES_DSN")).
+		SetEnv("JWT_SIGNING_KEY", os.Getenv("JWT_SIGNING_KEY"))
 
 	return conf
 }
