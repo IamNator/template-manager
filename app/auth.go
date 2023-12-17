@@ -6,11 +6,11 @@ import (
 	"log/slog"
 	"time"
 
+	"gorm.io/gorm"
+
 	"template-manager/dto"
 	"template-manager/email"
 	"template-manager/entity"
-
-	"gorm.io/gorm"
 )
 
 type App struct {

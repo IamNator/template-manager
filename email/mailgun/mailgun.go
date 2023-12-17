@@ -1,4 +1,4 @@
-package mailjet
+package mailgun
 
 import (
 	"context"
@@ -9,16 +9,18 @@ import (
 	"template-manager/email"
 )
 
-type Mailjet struct {
+type Mailgun struct {
 	from    string
 	mg      *mailgun.MailgunImpl
 	domain  string
 	apiKeys string
 }
 
-func New(domain, apiKeys, from string) *Mailjet {
+var _ email.Provider = (*Mailgun)(nil)
+
+func New(domain, apiKeys, from string) *Mailgun {
 	mg := mailgun.NewMailgun(domain, apiKeys)
-	return &Mailjet{
+	return &Mailgun{
 		from:    from,
 		mg:      mg,
 		domain:  domain,
@@ -26,17 +28,11 @@ func New(domain, apiKeys, from string) *Mailjet {
 	}
 }
 
-func New() *Mailjet {
-	return &Mailjet{}
-}
-
-var _ email.Provider = (*Mailjet)(nil)
-
 var templateIDMap = map[email.TemplateID]string{
 	email.TemplateIDSignupVerification: "signup_verification",
 }
 
-func (m *Mailjet) Send(ctx context.Context, id email.TemplateID, vars map[string]any) error {
+func (m *Mailgun) Send(ctx context.Context, id email.TemplateID, vars map[string]any) error {
 	if err := validateVars(vars); err != nil {
 		return err
 	}

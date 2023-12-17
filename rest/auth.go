@@ -1,15 +1,14 @@
 package rest
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"template-manager/dto"
-	"template-manager/entity"
 )
 
 func (s server) Signup(c *fiber.Ctx) error {
+	ctx := c.Context()
+
 	var request dto.SignUpRequest
 
 	err := c.BodyParser(&request)
@@ -17,13 +16,10 @@ func (s server) Signup(c *fiber.Ctx) error {
 		return err
 	}
 
-	var account = entity.Account{
-		Email: request.Email,
+	err = s.App.Signup(ctx, request)
+	if err != nil {
+		return err
 	}
-
-	// TODO: save to db
-
-	fmt.Println(account)
 
 	return c.JSON(fiber.Map{
 		"message": "check your email to continue sign up",

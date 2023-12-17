@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"log"
+
 	"template-manager/app"
 	"template-manager/config"
-	"template-manager/email/mailjet"
-
+	"template-manager/email/mailgun"
 	"template-manager/grpc"
 	"template-manager/rest"
 )
@@ -19,7 +19,7 @@ func main() {
 
 	conf := loadConfig()
 
-	mj := mailjet.New()
+	mj := mailgun.New()
 
 	app := app.New(mj)
 
