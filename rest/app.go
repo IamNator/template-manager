@@ -7,14 +7,18 @@ import (
 	"template-manager/config"
 )
 
+type Middleware interface {
+	FiberAuthMiddleware(c *fiber.Ctx) error
+}
 type server struct {
-	App *app.App
+	app        *app.App
+	middleware Middleware
 }
 
 // New creates a new fiber app
-func New(conf *config.Config, app *app.App) *server {
+func New(conf *config.Config, app *app.App, middlware Middleware) *server {
 	return &server{
-		App: app,
+		app: app,
 	}
 }
 
@@ -27,21 +31,21 @@ func (s server) Listen(port string) error {
 	app.Get("/api/health", health)
 	app.Get("/api/stats", stats)
 
-	// Define API endpoints for managing keys
-	app.Post("/api/key", addKey)
-	app.Get("/api/key", getKey)
-	app.Delete("/api/key/:id", deleteKey)
-
 	// Define API endpoints for managing users
 	app.Post("/api/user/login", s.Login)
 	app.Post("/api/user/signup", s.Signup)
 	app.Post("/api/user/logout", logout)
 
+	// Define API endpoints for managing keys
+	app.Post("/api/key", s.middleware.FiberAuthMiddleware, addKey)
+	app.Get("/api/key", s.middleware.FiberAuthMiddleware, getKey)
+	app.Delete("/api/key/:id", s.middleware.FiberAuthMiddleware, deleteKey)
+
 	// Define API endpoints for managing templates
-	app.Post("/api/template", addTemplate)
-	app.Get("/api/template", getTemplate)
-	app.Delete("/api/template/:id", deleteTemplate)
-	app.Put("/api/template/:id", updateTemplate)
+	app.Post("/api/template", s.middleware.FiberAuthMiddleware, addTemplate)
+	app.Get("/api/template", s.middleware.FiberAuthMiddleware, getTemplate)
+	app.Delete("/api/template/:id", s.middleware.FiberAuthMiddleware, deleteTemplate)
+	app.Put("/api/template/:id", s.middleware.FiberAuthMiddleware, updateTemplate)
 
 	// Start the server on port 8080
 	return app.Listen(port)

@@ -16,7 +16,7 @@ func (s server) Signup(c *fiber.Ctx) error {
 		return err
 	}
 
-	err = s.App.Signup(ctx, request)
+	err = s.app.Signup(ctx, request)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (s server) Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	response, err := s.App.Login(ctx, request)
+	response, err := s.app.Login(ctx, request)
 	if err != nil {
 		return err
 	}

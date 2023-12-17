@@ -9,6 +9,7 @@ import (
 	"template-manager/database"
 	"template-manager/email/mailjet"
 	"template-manager/entity"
+	"template-manager/rest/middleware"
 
 	"template-manager/app"
 	"template-manager/config"
@@ -42,14 +43,15 @@ func main() {
 	)
 	logger := slog.New(&slog.JSONHandler{})
 	sessionManager := session.New(db.Client, conf, logger)
-
+	midware := middleware.NewAuth(sessionManager)
+	
 	application := app.New(conf, mj, logger, db.Client, sessionManager)
 
 	if server == "grpc" {
 		grpcApp := grpc.New(conf)
 		log.Fatal(grpcApp.Listen(port))
 	} else {
-		restApp := rest.New(conf, application)
+		restApp := rest.New(conf, application, midware)
 		log.Fatal(restApp.Listen(port))
 	}
 }
