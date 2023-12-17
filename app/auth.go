@@ -70,7 +70,7 @@ func (a *App) Login(ctx context.Context, req dto.LoginRequest) (*dto.LoginRespon
 	if !acc.ComparePassword(req.Password) {
 		return nil, errors.New("invalid password")
 	}
-	//return token
+	// return token
 	return &dto.LoginResponse{
 		Token: time.Now().Format(time.RFC3339Nano),
 	}, nil
@@ -81,7 +81,6 @@ func (a *App) Logout(ctx context.Context, req dto.LogoutRequest) error {
 }
 
 func (a *App) InitiateResetPassword(ctx context.Context, req dto.InitiateResetPasswordRequest) error {
-
 	var acc = entity.Account{
 		Email: req.Email,
 	}

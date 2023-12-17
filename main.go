@@ -19,7 +19,7 @@ func main() {
 
 	conf := loadConfig()
 
-	mj := mailgun.New()
+	mj := mailgun.New(conf.GetString("MAILJET_DOMAIN"), conf.GetString("MAILJET_APIKET"), conf.GetString("MAILJET_SENDER"))
 
 	app := app.New(mj)
 

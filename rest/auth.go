@@ -27,9 +27,23 @@ func (s server) Signup(c *fiber.Ctx) error {
 	})
 }
 
-func login(c *fiber.Ctx) error {
+func (s server) Login(c *fiber.Ctx) error {
+	ctx := c.Context()
+
+	var request dto.LoginRequest
+
+	err := c.BodyParser(&request)
+	if err != nil {
+		return err
+	}
+
+	response, err := s.App.Login(ctx, request)
+	if err != nil {
+		return err
+	}
 	return c.JSON(fiber.Map{
-		"message": "pong",
+		"message": "welcome back",
+		"body":    response,
 	})
 }
 
