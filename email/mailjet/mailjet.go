@@ -54,6 +54,7 @@ func (m *Mailjet) Send(ctx context.Context, id email.TemplateID, vars map[string
 	}
 	to := vars["to"].(string)
 	subject := vars["subject"].(string)
+	vars["company_email"] = m.from
 	return sendTemplateEmail(ctx, m.mj, templateIDMap[id], m.from, to, subject, vars)
 }
 
