@@ -55,7 +55,8 @@ func loadConfig() *config.Config {
 
 	conf := config.New().
 		SetEnv("MAILJET_DOMAIN", os.Getenv("MAILJET_DOMAIN")).
-		SetEnv("MAILJET_APIKEY", os.Getenv("MAILJET_APIKEY")).
+		SetEnv("MAILJET_PRIVATE_KEY", os.Getenv("MAILJET_PRIVATE_KEY")).
+		SetEnv("MAILJET_PUBLIC_KEY", os.Getenv("MAILJET_PUBLIC_KEY")).
 		SetEnv("MAILJET_DEFAULT_SENDER", os.Getenv("MAILJET_DEFAULT_SENDER")).
 		SetEnv("POSTGRES_DSN", os.Getenv("POSTGRES_DSN"))
 
