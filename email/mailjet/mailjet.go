@@ -1,4 +1,4 @@
-package mailgun
+package mailjet
 
 import (
 	"context"

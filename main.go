@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"log"
+	"log/slog"
 	"os"
 	"template-manager/database"
+	"template-manager/email/mailjet"
 
 	"template-manager/app"
 	"template-manager/config"
-	"template-manager/email/mailgun"
 	"template-manager/grpc"
 	"template-manager/rest"
 )
@@ -20,14 +21,24 @@ func main() {
 	flag.Parse()
 
 	conf := loadConfig()
-
-	database.New(
+	db, err := database.New(
 		conf.GetString("POSTGRES_DSN"),
 	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	mj := mailjet.New(
+		conf.GetString("MAILJET_PUBLIC_KEY"),
+		conf.GetString("MAILJET_PRIVATE_KEY"),
+		conf.GetString("MAILJET_DEFAULT_SENDER"),
+	)
+	logger := slog.New(&slog.JSONHandler{})
 
-	mj := mailgun.New(conf.GetString("MAILJET_DOMAIN"), conf.GetString("MAILJET_APIKEY"), conf.GetString("MAILJET_SENDER"))
-
-	application := app.New(mj)
+	application := app.New(
+		mj,
+		logger,
+		db.Client,
+	)
 
 	if server == "grpc" {
 		grpcApp := grpc.New(conf)

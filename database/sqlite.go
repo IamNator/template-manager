@@ -10,14 +10,14 @@ type PostgresClient struct {
 	Client *gorm.DB
 }
 
-func New(dsn string) *PostgresClient {
+func New(dsn string) (*PostgresClient, error) {
 	postgresConn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
 		Logger:                 logger.Default.LogMode(logger.Silent),
 	})
 
 	if err != nil {
-		panic(err.Error())
+		return nil, err
 	}
-	return &PostgresClient{Client: postgresConn}
+	return &PostgresClient{Client: postgresConn}, nil
 }

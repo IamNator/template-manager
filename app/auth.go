@@ -15,13 +15,15 @@ import (
 
 type App struct {
 	Email  email.Provider
-	logger slog.Logger
+	logger *slog.Logger
 	db     *gorm.DB // TODO: replace with repository
 }
 
-func New(email email.Provider) *App {
+func New(email email.Provider, logger *slog.Logger, db *gorm.DB) *App {
 	return &App{
-		Email: email,
+		Email:  email,
+		db:     db,
+		logger: logger,
 	}
 }
 
@@ -70,7 +72,7 @@ func (a *App) Login(ctx context.Context, req dto.LoginRequest) (*dto.LoginRespon
 	if !acc.ComparePassword(req.Password) {
 		return nil, errors.New("invalid password")
 	}
-	
+
 	// return token
 	return &dto.LoginResponse{
 		Token: time.Now().Format(time.RFC3339Nano),
