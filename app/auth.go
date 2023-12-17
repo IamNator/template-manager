@@ -49,9 +49,10 @@ func (a *App) Signup(ctx context.Context, req dto.SignUpRequest) error {
 	}
 	//send email
 	vars := map[string]any{
-		"to":      req.Email,
-		"subject": "Welcome to Template Manager",
-		"body":    "Your password is " + randomPassword,
+		"to":           req.Email,
+		"subject":      "Welcome to Template Manager",
+		"password":     randomPassword,
+		"company_name": "Template Manager",
 	}
 	if err := a.Email.Send(ctx, email.TemplateIDSignupVerification, vars); err != nil {
 		a.logger.ErrorContext(ctx, "failed to send email %+v", err)
