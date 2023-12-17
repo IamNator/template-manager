@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"template-manager/config"
 	"time"
 
 	grpc "google.golang.org/grpc"
@@ -41,7 +42,7 @@ func (s *server) Download(ctx context.Context, req *TemplateRequest) (*Template,
 	}, nil
 }
 
-func New() *server {
+func New(conf *config.Config) *server {
 	return &server{}
 }
 
@@ -56,5 +57,4 @@ func (s server) Listen(port string) error {
 	grpcServer := grpc.NewServer()
 	RegisterServiceServer(grpcServer, &s)
 	return grpcServer.Serve(lis)
-
 }

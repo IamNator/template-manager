@@ -2,12 +2,13 @@ package rest
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"template-manager/config"
 )
 
 type server struct{}
 
 // New creates a new fiber app
-func New() *server {
+func New(conf *config.Config) *server {
 	return &server{}
 }
 
