@@ -26,6 +26,10 @@ func New(domain, apiKeys, from string) *Mailjet {
 	}
 }
 
+func New() *Mailjet {
+	return &Mailjet{}
+}
+
 var _ email.Provider = (*Mailjet)(nil)
 
 var templateIDMap = map[email.TemplateID]string{

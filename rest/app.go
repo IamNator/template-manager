@@ -2,14 +2,19 @@ package rest
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"template-manager/app"
 	"template-manager/config"
 )
 
-type server struct{}
+type server struct {
+	App *app.App
+}
 
 // New creates a new fiber app
-func New(conf *config.Config) *server {
-	return &server{}
+func New(conf *config.Config, app *app.App) *server {
+	return &server{
+		App: app,
+	}
 }
 
 func (s server) Listen(port string) error {
@@ -28,7 +33,7 @@ func (s server) Listen(port string) error {
 
 	// Define API endpoints for managing users
 	app.Post("/api/user/login", login)
-	app.Post("/api/user/signup", signup)
+	app.Post("/api/user/signup", s.Signup)
 	app.Post("/api/user/logout", logout)
 
 	// Define API endpoints for managing templates

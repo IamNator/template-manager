@@ -9,7 +9,7 @@ import (
 	"template-manager/entity"
 )
 
-func signup(c *fiber.Ctx) error {
+func (s server) Signup(c *fiber.Ctx) error {
 	var request dto.SignUpRequest
 
 	err := c.BodyParser(&request)

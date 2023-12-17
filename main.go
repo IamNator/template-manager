@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"log"
+	"template-manager/app"
 	"template-manager/config"
+	"template-manager/email/mailjet"
 
 	"template-manager/grpc"
 	"template-manager/rest"
@@ -17,12 +19,16 @@ func main() {
 
 	conf := loadConfig()
 
+	mj := mailjet.New()
+
+	app := app.New(mj)
+
 	if server == "grpc" {
-		app := grpc.New(conf)
-		log.Fatal(app.Listen(port))
+		grpcApp := grpc.New(conf)
+		log.Fatal(grpcApp.Listen(port))
 	} else {
-		app := rest.New(conf)
-		log.Fatal(app.Listen(port))
+		restApp := rest.New(conf, app)
+		log.Fatal(restApp.Listen(port))
 	}
 }
 
