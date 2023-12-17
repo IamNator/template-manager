@@ -2,8 +2,9 @@ package config
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"sync"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -16,7 +17,7 @@ func New() *Config {
 		return nil
 	}
 
-	conf := new(sync.Map)
+	conf := new(sync.Map) //
 	return &Config{conf: conf}
 }
 
