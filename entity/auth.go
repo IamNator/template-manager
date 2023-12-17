@@ -10,13 +10,13 @@ import (
 )
 
 type Account struct {
-	ID             string     `json:"id"`
-	Email          string     `json:"email"`
-	HashSalt       string     `json:"hash_salt"`
-	HashedPassword string     `json:"hashed_password"`
-	VerifiedAt     *time.Time `json:"verified_at"`
-	CreatedAt      time.Time  `json:"created_at"`
-	UpdatedAt      *time.Time `json:"updated_at"`
+	ID             string     `json:"id" gorm:"primaryKey;column:id"`
+	Email          string     `json:"email" gorm:"unique;column:email"`
+	HashSalt       string     `json:"hash_salt" gorm:"column:hash_salt"`
+	HashedPassword string     `json:"hashed_password" gorm:"column:hashed_password"`
+	VerifiedAt     *time.Time `json:"verified_at" gorm:"column:verified_at"`
+	CreatedAt      time.Time  `json:"created_at" gorm:"column:created_at"`
+	UpdatedAt      *time.Time `json:"updated_at" gorm:"column:updated_at"`
 }
 
 func (Account) TableName() string {
