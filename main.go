@@ -7,6 +7,7 @@ import (
 	"os"
 	"template-manager/database"
 	"template-manager/email/mailjet"
+	"template-manager/entity"
 
 	"template-manager/app"
 	"template-manager/config"
@@ -28,7 +29,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	err = db.Client.AutoMigrate(&entity.Account{})
+	if err != nil {
+		log.Fatal(err)
+	}
 	mj := mailjet.New(
 		conf.GetString("MAILJET_PUBLIC_KEY"),
 		conf.GetString("MAILJET_PRIVATE_KEY"),

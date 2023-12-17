@@ -45,7 +45,7 @@ func New(publicKey, privateKey, from string, opts ...Option) *Mailjet {
 }
 
 var templateIDMap = map[email.TemplateID]int{
-	email.TemplateIDSignupVerification: 4543263545,
+	email.TemplateIDSignupVerification: 5456918,
 }
 
 func (m *Mailjet) Send(ctx context.Context, id email.TemplateID, vars map[string]any) error {
