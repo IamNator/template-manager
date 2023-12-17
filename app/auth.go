@@ -47,6 +47,7 @@ func (a *App) Signup(ctx context.Context, req dto.SignUpRequest) error {
 		a.logger.ErrorContext(ctx, "failed to create account %+v", err)
 		return err
 	}
+
 	//send email
 	vars := map[string]any{
 		"to":           req.Email,
