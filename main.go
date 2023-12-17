@@ -37,7 +37,7 @@ func main() {
 		conf.GetString("MAILJET_PUBLIC_KEY"),
 		conf.GetString("MAILJET_PRIVATE_KEY"),
 		conf.GetString("MAILJET_DEFAULT_SENDER"),
-		mailjet.Name("template manager"),
+		mailjet.WithName("template manager"),
 	)
 	logger := slog.New(&slog.JSONHandler{})
 

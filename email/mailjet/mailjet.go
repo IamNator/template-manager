@@ -24,7 +24,7 @@ var _ email.Provider = (*Mailjet)(nil)
 type Option func(m *Mailjet)
 
 // Set the company name that will appear in the email
-func Name(name string) Option {
+func WithName(name string) Option {
 	return func(m *Mailjet) {
 		m.fromName = name
 	}
