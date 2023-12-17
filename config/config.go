@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"sync"
 )
 
@@ -10,6 +11,11 @@ type Config struct {
 }
 
 func New() *Config {
+	err := godotenv.Load(".env")
+	if err != nil {
+		return nil
+	}
+
 	conf := new(sync.Map)
 	return &Config{conf: conf}
 }
