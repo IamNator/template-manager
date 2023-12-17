@@ -21,12 +21,14 @@ func main() {
 	flag.Parse()
 
 	conf := loadConfig()
+
 	db, err := database.New(
 		conf.GetString("POSTGRES_DSN"),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	mj := mailjet.New(
 		conf.GetString("MAILJET_PUBLIC_KEY"),
 		conf.GetString("MAILJET_PRIVATE_KEY"),
@@ -34,11 +36,7 @@ func main() {
 	)
 	logger := slog.New(&slog.JSONHandler{})
 
-	application := app.New(
-		mj,
-		logger,
-		db.Client,
-	)
+	application := app.New(mj, logger, db.Client)
 
 	if server == "grpc" {
 		grpcApp := grpc.New(conf)
@@ -54,7 +52,7 @@ func loadConfig() *config.Config {
 	conf := config.New().
 		SetEnv("MAILJET_DOMAIN", os.Getenv("MAILJET_DOMAIN")).
 		SetEnv("MAILJET_APIKEY", os.Getenv("MAILJET_APIKEY")).
-		SetEnv("MAILJET_SENDER", os.Getenv("MAILJET_SENDER")).
+		SetEnv("MAILJET_DEFAULT_SENDER", os.Getenv("MAILJET_DEFAULT_SENDER")).
 		SetEnv("POSTGRES_DSN", os.Getenv("POSTGRES_DSN"))
 
 	return conf
