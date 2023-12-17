@@ -50,7 +50,7 @@ func (a *App) Signup(ctx context.Context, req dto.SignUpRequest) error {
 	//send email
 	vars := map[string]any{
 		"to":           req.Email,
-		"subject":      "Welcome to Template Manager",
+		"subject":      "Password Setup",
 		"password":     randomPassword,
 		"company_name": "Template Manager",
 	}
