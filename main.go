@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = db.Client.AutoMigrate(&entity.Account{})
+	err = db.Client.AutoMigrate(&entity.Account{}, entity.Key{})
 	if err != nil {
 		log.Fatal(err)
 	}
