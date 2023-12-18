@@ -14,7 +14,7 @@ type Config struct {
 func New() *Config {
 	err := godotenv.Load(".env")
 	if err != nil {
-		return nil
+		println("Error loading .env file")
 	}
 
 	conf := &sync.Map{}

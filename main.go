@@ -44,7 +44,7 @@ func main() {
 	logger := slog.New(&slog.JSONHandler{})
 	sessionManager := session.New(db.Client, conf, logger)
 	midware := middleware.NewAuth(sessionManager)
-	
+
 	application := app.New(conf, mj, logger, db.Client, sessionManager)
 
 	if server == "grpc" {
