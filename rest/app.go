@@ -11,6 +11,7 @@ type Middleware interface {
 	FiberAuthMiddleware(c *fiber.Ctx) error
 }
 type server struct {
+	conf       *config.Config
 	app        *app.App
 	middleware Middleware
 }
@@ -18,7 +19,9 @@ type server struct {
 // New creates a new fiber app
 func New(conf *config.Config, app *app.App, middlware Middleware) *server {
 	return &server{
-		app: app,
+		conf:       conf,
+		app:        app,
+		middleware: middlware,
 	}
 }
 
@@ -34,7 +37,7 @@ func (s server) Listen(port string) error {
 	// Define API endpoints for managing users
 	app.Post("/api/user/login", s.Login)
 	app.Post("/api/user/signup", s.Signup)
-	app.Post("/api/user/logout", logout)
+	app.Post("/api/user/logout", s.Logout)
 
 	// Define API endpoints for managing keys
 	app.Post("/api/key", s.middleware.FiberAuthMiddleware, addKey)

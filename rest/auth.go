@@ -28,16 +28,13 @@ func (s server) Signup(c *fiber.Ctx) error {
 }
 
 func (s server) Login(c *fiber.Ctx) error {
-	ctx := c.Context()
-
 	var request dto.LoginRequest
-
 	err := c.BodyParser(&request)
 	if err != nil {
 		return err
 	}
 
-	response, err := s.app.Login(ctx, request)
+	response, err := s.app.Login(c.Context(), request)
 	if err != nil {
 		return err
 	}
@@ -47,8 +44,18 @@ func (s server) Login(c *fiber.Ctx) error {
 	})
 }
 
-func logout(c *fiber.Ctx) error {
+func (s server) Logout(c *fiber.Ctx) error {
+	var request dto.LogoutRequest
+	err := c.BodyParser(&request)
+	if err != nil {
+		return err
+	}
+
+	err = s.app.Logout(c.Context(), request)
+	if err != nil {
+		return err
+	}
 	return c.JSON(fiber.Map{
-		"message": "pong",
+		"message": "successfully logged out",
 	})
 }

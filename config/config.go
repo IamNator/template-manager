@@ -17,7 +17,7 @@ func New() *Config {
 		println("Error loading .env file")
 	}
 
-	conf := &sync.Map{}
+	conf := new(sync.Map)
 	return &Config{conf: conf}
 }
 
