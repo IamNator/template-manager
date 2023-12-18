@@ -40,9 +40,9 @@ func (s server) Listen(port string) error {
 	app.Post("/api/user/logout", s.Logout)
 
 	// Define API endpoints for managing keys
-	app.Post("/api/key", s.middleware.FiberAuthMiddleware, addKey)
-	app.Get("/api/key", s.middleware.FiberAuthMiddleware, getKey)
-	app.Delete("/api/key/:id", s.middleware.FiberAuthMiddleware, deleteKey)
+	app.Post("/api/key", s.middleware.FiberAuthMiddleware, s.AddKey)
+	app.Get("/api/key", s.middleware.FiberAuthMiddleware, s.FindKeys)
+	app.Delete("/api/key/:id", s.middleware.FiberAuthMiddleware, s.DeleteKey)
 
 	// Define API endpoints for managing templates
 	app.Post("/api/template", s.middleware.FiberAuthMiddleware, addTemplate)
