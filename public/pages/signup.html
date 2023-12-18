@@ -1,102 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Message Template Manager - Signup</title>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="stylesheet" href="assets/css/stylesheet.css"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message Template Manager Login</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f3f3f3;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .login-container h2 {
-            text-align: center;
-        }
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .login-form input {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-        .login-form button {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .login-form button:hover {
-            background-color: #0056b3;
-        }
-        .verification-message {
-            /* display: none; */
-            position: fixed;
-            top: 24%;
-            right: 24%;
-            background-color: #ffffff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 9999;
-            transition: 0.3s ease-in-out;
-        }
-    </style>
-</head>
-<body>
-    <div class="signup-container">
-        <h2>Sign Up for Message Template Manager</h2>
-        <form class="signup-form" id="signupForm">
-            <input type="email" id="email" placeholder="Email" required>
-            <button type="submit">Sign Up</button>
-        </form>
-    </div>
+      body {
+        font-family: Arial, sans-serif;
+        /* font-family: Roboto,monospace; */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f3f3f3;
+      }
+      .signup-container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .signup-container h2 {
+        text-align: center;
+      }
+      .signup-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .signup-form input {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      .signup-form button {
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #2e2e2e;
+        color: #fff;
+        cursor: pointer;
+      }
+      .signup-form button:hover {
+        background-color: #fff;
+        color: #2e2e2e;
+        border: 1px solid #2e2e2e;
+      }
+      .signup-form button:active {
+        background-color: #2e2e2e;
+        color: #fff;
+        border: 1px solid #2e2e2e;
+        transition-property: calc(0.3s * 2);
+      }
+      .signup-form button:disabled {
+        background-color: #ccc;
+        color: #fff;
+        border: 1px solid #ccc;
+        cursor: not-allowed;
+      }
+      .verification-message {
+        position: absolute;
+        top: 10%; /* Adjust this value to position it above the form */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ffffff;
+        padding: 10px;
+        max-width: min-content;
+        max-height: min-content;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 40; /* Higher z-index to appear above the login form */
+        transition: 0.3s ease-in-out;
+        text-align: center;
+        max-width: 320px;
+        width: 80%;
+      }
+      .verification-message p {
+        margin: 0;
+        font-size: small;
+        font-family: Helvetica, sans-serif Courier, monospace;
+      }
+      .verification-message h4 {
+        margin: 0;
+        margin-bottom: 10px;
+        font-size: medium;
+        font-family: monospace;
+      }
 
-    <!-- Email Verification Modal -->
-    <div class="verification-modal" id="verificationModal">
-        <div class="verification-content">
-            <div class="verification-message" >
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h3>Sent Email Verification</h3>
-                <p>An email with verification instructions has been sent to your email address. Please verify to proceed.</p>
-            </div>
-            
-            <!-- Additional content or form for email verification -->
+      .close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        cursor: pointer;
+        font-size: 24px;
+        color: #555;
+      }
+
+      .close:hover {
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="verification-modal"
+      id="verificationModal"
+      style="display: none"
+    >
+      <div class="verification-content">
+        <div class="verification-message">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h4>Alert</h4>
+          <p>
+            Login failed. Please check your email and password and try again.
+          </p>
         </div>
+
+        <!-- Additional content or form for email verification -->
+      </div>
+    </div>
+    <div class="signup-container">
+      <h2>Sign Up</h2>
+      <form class="signup-form" id="signupForm">
+        <input type="email" id="email" placeholder="email" required />
+        <button id="signupButton" type="submit">Sign Up</button>
+
+        <div class="login-buttons">
+          <button id="loginButton">Login</button>
+        </div>
+      </form>
     </div>
 
     <script>
-        // JavaScript logic here for form submission, email verification, etc.
-        function closeModal() {
-            document.getElementById('verificationModal').style.display = 'none';
-        }
+      localStorage.removeItem("token");
+      localStorage.removeItem("exp");
+      localStorage.removeItem("email");
 
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            // Here, you can perform form validation and send data to the server for email verification
-            // You'll need backend scripting to handle email verification logic and sending emails
-            // Upon successful verification, display the verification modal
-            document.getElementById('verificationModal').style.display = 'block';
+      // Function to close the verification modal
+      window.closeModal = () => {
+        const verificationModal = document.getElementById("verificationModal");
+        verificationModal.style.display = "none";
+      };
+      const displayAlert = (msg, isErr = true) => {
+        let color = "#000";
+        if (isErr) {
+          color = "#eb4c4c";
+        }
+        const verificationModal = document.getElementById("verificationModal");
+        if (verificationModal) {
+          verificationModal.style.display = "block";
+          const verificationMessage = document.querySelector(
+            ".verification-message p"
+          );
+          if (verificationMessage) {
+            verificationMessage.textContent = msg;
+            verificationMessage.style.color = color;
+          }
+          // Automatically hide the modal after 60 seconds (60,000 milliseconds)
+          setTimeout(() => {
+            verificationModal.style.display = "none";
+          }, 60000);
+        } else {
+          console.log("Verification Modal not found.");
+        }
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const loginButton = document.getElementById("loginButton");
+        loginButton.addEventListener("click",async (event) => {
+          event.preventDefault();
+          window.location.href = "../index.html"; 
         });
+
+        const manageKeysButton = document.getElementById("signupButton");
+        manageKeysButton.disabled = true; // Initially disable the button
+        const emailInput = document.getElementById("email");
+        const handleInputChange = () => {
+          const email = emailInput.value.trim();
+          manageKeysButton.disabled = !email;  // Enable the button only if email have content
+        };
+        emailInput.addEventListener("input", handleInputChange);
+        manageKeysButton.addEventListener("click", async (event) => {
+          event.preventDefault();
+          // Get the values from the input fields
+          const email = emailInput.value.trim();
+          // Send a request to your backend
+          try {
+            const response = await fetch("/api/user/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email }),
+            });
+
+            // Check if the login was successful
+            if (response.ok) {
+              const data = await response.json();
+              // check if login was successful
+              if (data.success) {
+                displayAlert(data.message, false);
+                window.location.href = "../index.html";
+                return;
+              }
+              // Alert the user with the error message
+              displayAlert(data.message);
+            } else {
+              // Alert the user with the error message
+              displayAlert(data.message);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            // Alert the user about the error
+            displayAlert(error.message);
+          }
+        });
+      });
     </script>
-</body>
+  </body>
 </html>

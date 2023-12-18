@@ -10,20 +10,25 @@ func (s server) Signup(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	var request dto.SignUpRequest
-
 	err := c.BodyParser(&request)
 	if err != nil {
-		return err
+		return c.JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
 	}
 
 	err = s.app.Signup(ctx, request)
 	if err != nil {
-		return err
+		return c.JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
 	}
 
 	return c.JSON(fiber.Map{
+		"success": true,
 		"message": "check your email to continue sign up",
-		"status":  true,
 	})
 }
 

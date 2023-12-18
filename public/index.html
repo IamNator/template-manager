@@ -123,12 +123,12 @@
     <div class="login-container">
       <h2>template manager</h2>
       <form class="login-form" id="loginForm">
-        <input type="text" id="username" placeholder="Username" required />
-        <input type="password" id="password" placeholder="Password" required />
+        <input type="email" id="email" placeholder="email" required />
+        <input type="password" id="password" placeholder="password" required />
         <button id="loginButton" type="submit">Login</button>
 
-        <div class="dashboard-buttons">
-          <button onclick="location.href='./pages/signup.html'">Sign Up</button>
+        <div class="signup-buttons">
+          <button id="signupButton">Sign Up</button>
         </div>
       </form>
     </div>
@@ -180,27 +180,35 @@
       };
 
       document.addEventListener("DOMContentLoaded", () => {
+        const signupButton = document.getElementById("signupButton");
         const manageKeysButton = document.getElementById("loginButton");
         manageKeysButton.disabled = true; // Initially disable the button
 
-        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
 
+        signupButton.addEventListener("click",async (event) => {
+          event.preventDefault();
+          // Redirect to the manage API keys section or page
+          window.location.href = "./pages/signup.html"; 
+        });
+
         const handleInputChange = () => {
-          const username = usernameInput.value.trim();
+          const email = emailInput.value.trim();
           const password = passwordInput.value.trim();
           // Enable the button only if both fields have content
-          manageKeysButton.disabled = !(username && password);
+          manageKeysButton.disabled = !(email && password);
         };
 
-        usernameInput.addEventListener("input", handleInputChange);
+        emailInput.addEventListener("input", handleInputChange);
         passwordInput.addEventListener("input", handleInputChange);
 
+      
         manageKeysButton.addEventListener("click", async (event) => {
           // Prevents the form from submitting if button is disabled
           event.preventDefault();
           // Get the values from the input fields
-          const email = usernameInput.value.trim();
+          const email = emailInput.value.trim();
           const password = passwordInput.value.trim();
 
           // Send a request to your backend
