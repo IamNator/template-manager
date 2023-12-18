@@ -77,17 +77,22 @@ func (a *App) Signup(ctx context.Context, req dto.SignUpRequest) error {
 	return nil
 }
 
+const (
+	LoginFailed = "login failed. please check your email and password and try again"
+)
+
 func (a *App) Login(ctx context.Context, req dto.LoginRequest) (*dto.LoginResponse, error) {
 	// find existing account
 	var acc = entity.Account{
 		Email: req.Email,
 	}
 	if err := a.db.Model(&acc).Where("email = ?", req.Email).First(&acc).Error; err != nil {
-		return nil, errors.New("account does not exist")
+		a.logger.InfoContext(ctx, "failed to find account %+v", err)
+		return nil, errors.New(LoginFailed)
 	}
 	// check password
 	if !acc.ComparePassword(req.Password) {
-		return nil, errors.New("invalid password")
+		return nil, errors.New(LoginFailed)
 	}
 
 	// create session

@@ -1,122 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Message Template Dashboard</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f3f3f3;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f3f3f3;
+      }
 
-        .dashboard-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
+      .dashboard-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+      }
 
-        h1 {
-            margin-bottom: 30px;
-        }
+      h1 {
+        margin-bottom: 30px;
+      }
 
-        .filter-buttons {
-            margin-bottom: 20px;
-        }
+      .filter-buttons {
+        margin-bottom: 20px;
+      }
 
-        .filter-buttons button {
-            margin: 5px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+      .filter-buttons button {
+        margin: 5px;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-        .filter-buttons button.active {
-            background-color: #007bff;
-            color: white;
-        }
+      .filter-buttons button.active {
+        background-color: #007bff;
+        color: white;
+      }
 
-        .template-list {
-            list-style: none;
-            padding: 0;
-            display: grid;
-            gap: 10px;
-            justify-content: center;
-        }
+      .template-list {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+        justify-content: center;
+      }
 
-        .template-list li {
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      .template-list li {
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="dashboard-container">
-        <h1>Message Template Dashboard</h1>
-        <div class="dashboard-buttons">
-            <button id="manageKeysButton">Manage API Keys</button>
-            <button onclick="logout()">Logout</button>
-        </div>
-        <div class="filter-buttons">
-            <button class="filter-button active" data-filter="all">All</button>
-            <button class="filter-button" data-filter="email">Email</button>
-            <button class="filter-button" data-filter="whatsapp">WhatsApp</button>
-            <button class="filter-button" data-filter="sms">SMS</button>
-            <button class="filter-button" data-filter="push">Push Notification</button>
-        </div>
-        <ul class="template-list">
-            <li class="template email">Template 1 (Email)</li>
-            <li class="template whatsapp">Template 2 (WhatsApp)</li>
-            <li class="template sms">Template 3 (SMS)</li>
-            <li class="template push">Template 4 (Push Notification)</li>
-            <!-- Add more templates here -->
-        </ul>
+      <h1>Message Template Dashboard</h1>
+      <div class="dashboard-buttons">
+        <button id="manageKeysButton">Manage API Keys</button>
+        <button onclick="logout()">Logout</button>
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-button active" data-filter="all">All</button>
+        <button class="filter-button" data-filter="email">Email</button>
+        <button class="filter-button" data-filter="whatsapp">WhatsApp</button>
+        <button class="filter-button" data-filter="sms">SMS</button>
+        <button class="filter-button" data-filter="push">
+          Push Notification
+        </button>
+      </div>
+      <ul class="template-list">
+        <li class="template email">Template 1 (Email)</li>
+        <li class="template whatsapp">Template 2 (WhatsApp)</li>
+        <li class="template sms">Template 3 (SMS)</li>
+        <li class="template push">Template 4 (Push Notification)</li>
+        <!-- Add more templates here -->
+      </ul>
     </div>
 
     <script>
-        const filterButtons = document.querySelectorAll('.filter-button');
-        const templates = document.querySelectorAll('.template');
+      const filterButtons = document.querySelectorAll('.filter-button');
+      const templates = document.querySelectorAll('.template');
 
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const filterValue = button.getAttribute('data-filter');
+      filterButtons.forEach(button => {
+          button.addEventListener('click', () => {
+              const filterValue = button.getAttribute('data-filter');
 
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+              filterButtons.forEach(btn => btn.classList.remove('active'));
+              button.classList.add('active');
 
-                templates.forEach(template => {
-                    template.style.display = 'none';
-                    if (filterValue === 'all' || template.classList.contains(filterValue)) {
-                        template.style.display = 'block';
-                    }
-                });
-            });
-        });
+              templates.forEach(template => {
+                  template.style.display = 'none';
+                  if (filterValue === 'all' || template.classList.contains(filterValue)) {
+                      template.style.display = 'block';
+                  }
+              });
+          });
+      });
 
-        const manageKeysButton = document.getElementById('manageKeysButton');
-        manageKeysButton.addEventListener('click', () => {
-            // Redirect to the manage API keys section or page
-            window.location.href = './pages/manage_keys.html'; // Replace 'manage_keys.html' with your actual management page
-        });
+      const manageKeysButton = document.getElementById('manageKeysButton');
+      manageKeysButton.addEventListener('click', () => {
+          // Redirect to the manage API keys section or page
+          window.location.href = './manage_keys.html'; // Replace 'manage_keys.html' with your actual management page
+      });
 
-        function logout() { 
-            // Perform logout functionality here
-            // For example, redirecting to logout endpoint or clearing session
-            // This function should handle the logout logic
-            alert('Logged out!');
-            // Redirect to login page or perform logout actions
-        }
+      function  logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('exp');
+        localStorage.removeItem('email');
+        window.location.href = '../index.html';  
+      }
     </script>
-</body>
+  </body>
 </html>

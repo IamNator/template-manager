@@ -8,6 +8,7 @@
     <style>
       body {
         font-family: Arial, sans-serif;
+        /* font-family: Roboto,monospace; */
         margin: 0;
         padding: 0;
         display: flex;
@@ -62,9 +63,63 @@
         border: 1px solid #ccc;
         cursor: not-allowed;
       }
+      .verification-message {
+        position: absolute;
+        top: 10%; /* Adjust this value to position it above the form */
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ffffff;
+        padding: 10px;
+        max-width: min-content;
+        max-height: min-content;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 40; /* Higher z-index to appear above the login form */
+        transition: 0.3s ease-in-out;
+        text-align: center;
+        max-width: 320px;
+        width: 80%;
+      }
+      .verification-message p {
+        margin: 0;
+        font-size: small;
+        font-family: Helvetica, sans-serif Courier, monospace;
+      }
+      .verification-message h4 {
+        margin: 0;
+        margin-bottom: 10px;
+        font-size: medium;
+        font-family: monospace;
+      }
+
+      .close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        cursor: pointer;
+        font-size: 24px;
+        color: #555;
+      }
+
+      .close:hover {
+        color: #000;
+      }
     </style>
   </head>
   <body>
+    <div class="verification-modal" id="verificationModal" style="display: none;">
+      <div class="verification-content">
+        <div class="verification-message">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h4>Alert</h4>
+          <p>
+            Login failed. Please check your email and password and try again.
+          </p>
+        </div>
+
+        <!-- Additional content or form for email verification -->
+      </div>
+    </div>
     <div class="login-container">
       <h2>template manager</h2>
       <form class="login-form" id="loginForm">
@@ -79,6 +134,51 @@
     </div>
 
     <script>
+      // check if the user is already logged in
+      const token = localStorage.getItem("token");
+      if (token) {
+        //check expiration date
+        const exp = localStorage.getItem("exp");
+        const now = new Date();
+        if (now.getTime() > exp) {
+          // remove the token and redirect to the login page
+          localStorage.removeItem("token");
+          localStorage.removeItem("exp");
+          localStorage.removeItem("email");
+          window.location.href = "./index.html";
+        }
+        // redirect to the dashboard page
+        window.location.href = "./pages/template.html";
+      }
+      // Function to close the verification modal
+      window.closeModal = () => {
+        const verificationModal = document.getElementById("verificationModal");
+        verificationModal.style.display = "none";
+      };
+      const displayAlert = (msg, isErr = true) => {
+        let color = "#000";
+        if (isErr) {
+          color = "#eb4c4c";
+        }
+        const verificationModal = document.getElementById("verificationModal");
+        if (verificationModal) {
+          verificationModal.style.display = "block";
+          const verificationMessage = document.querySelector(
+            ".verification-message p"
+          );
+          if (verificationMessage) {
+            verificationMessage.textContent = msg;
+            verificationMessage.style.color = color;
+          }
+          // Automatically hide the modal after 10 seconds (10,000 milliseconds)
+          setTimeout(() => {
+            verificationModal.style.display = "none";
+          }, 10000);
+        } else {
+          console.log("Verification Modal not found.");
+        }
+      };
+
       document.addEventListener("DOMContentLoaded", () => {
         const manageKeysButton = document.getElementById("loginButton");
         manageKeysButton.disabled = true; // Initially disable the button
@@ -98,7 +198,7 @@
 
         manageKeysButton.addEventListener("click", async (event) => {
           // Prevents the form from submitting if button is disabled
-          event.preventDefault(); 
+          event.preventDefault();
           // Get the values from the input fields
           const email = usernameInput.value.trim();
           const password = passwordInput.value.trim();
@@ -113,24 +213,31 @@
               body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.json();
-
             // Check if the login was successful
             if (response.ok) {
-              // Store the token in localStorage
-              localStorage.setItem("email", data.email);
-              localStorage.setItem("exp", data.exp);
-              localStorage.setItem("token", data.token);
-              // Redirect to the dashboard page
-              window.location.href = "./pages/template.html";
+              const data = await response.json();
+
+              // check if login was successful
+              if (data.success) {
+                // Store the token in localStorage
+                localStorage.setItem("email", data.body.email);
+                localStorage.setItem("exp", data.body.exp);
+                localStorage.setItem("token", data.body.token);
+                // Redirect to the dashboard page
+                window.location.href = "./pages/template.html";
+                displayAlert("Login successful.", false);
+                return;
+              }
+              // Alert the user with the error message
+              displayAlert(data.message);
             } else {
               // Alert the user with the error message
-              alert(data.message);
+              displayAlert(data.message);
             }
           } catch (error) {
             console.error("Error:", error);
             // Alert the user about the error
-            alert(error.message);
+            displayAlert(error.message);
           }
         });
       });

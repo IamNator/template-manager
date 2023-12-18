@@ -36,9 +36,13 @@ func (s server) Login(c *fiber.Ctx) error {
 
 	response, err := s.app.Login(c.Context(), request)
 	if err != nil {
-		return err
+		return c.JSON(fiber.Map{
+			"success": false,
+			"message": err.Error(),
+		})
 	}
 	return c.JSON(fiber.Map{
+		"success": true,
 		"message": "welcome back",
 		"body":    response,
 	})
