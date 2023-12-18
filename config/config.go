@@ -17,7 +17,7 @@ func New() *Config {
 		return nil
 	}
 
-	conf := new(sync.Map) //
+	conf := &sync.Map{}
 	return &Config{conf: conf}
 }
 
