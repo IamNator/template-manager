@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- <link rel="stylesheet" href="assets/css/stylesheet.css"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Message Template Manager Login</title>
     <style>
@@ -19,6 +20,7 @@
         background-color: #fff;
         padding: 20px;
         border-radius: 8px;
+        width: 300px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
       .login-container h2 {
@@ -39,37 +41,98 @@
         padding: 10px;
         border: none;
         border-radius: 4px;
-        background-color: #007bff;
+        background-color: #2e2e2e;
         color: #fff;
         cursor: pointer;
-        transition: background-color 0.3s ease;
       }
       .login-form button:hover {
-        background-color: #0056b3;
+        background-color: #fff;
+        color: #2e2e2e;
+        border: 1px solid #2e2e2e;
+      }
+      .login-form button:active {
+        background-color: #2e2e2e;
+        color: #fff;
+        border: 1px solid #2e2e2e;
+        transition-property: calc(0.3s * 2);
+      }
+      .login-form button:disabled {
+        background-color: #ccc;
+        color: #fff;
+        border: 1px solid #ccc;
+        cursor: not-allowed;
       }
     </style>
   </head>
   <body>
     <div class="login-container">
-      <h2>Message Template Manager</h2>
+      <h2>template manager</h2>
       <form class="login-form" id="loginForm">
         <input type="text" id="username" placeholder="Username" required />
         <input type="password" id="password" placeholder="Password" required />
         <button id="loginButton" type="submit">Login</button>
 
         <div class="dashboard-buttons">
-          <button onclick="location.href='/signup.html'">
-            Sign Up
-          </button>
+          <button onclick="location.href='./pages/signup.html'">Sign Up</button>
         </div>
       </form>
     </div>
 
     <script>
-      const manageKeysButton = document.getElementById("loginButton");
-      manageKeysButton.addEventListener("click", () => {
-        // Redirect to the manage API keys section or page
-        window.location.href = "/dashboard/template.html";
+      document.addEventListener("DOMContentLoaded", () => {
+        const manageKeysButton = document.getElementById("loginButton");
+        manageKeysButton.disabled = true; // Initially disable the button
+
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+
+        const handleInputChange = () => {
+          const username = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+          // Enable the button only if both fields have content
+          manageKeysButton.disabled = !(username && password);
+        };
+
+        usernameInput.addEventListener("input", handleInputChange);
+        passwordInput.addEventListener("input", handleInputChange);
+
+        manageKeysButton.addEventListener("click", async (event) => {
+          // Prevents the form from submitting if button is disabled
+          event.preventDefault(); 
+          // Get the values from the input fields
+          const email = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+
+          // Send a request to your backend
+          try {
+            const response = await fetch("/api/user/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            // Check if the login was successful
+            if (response.ok) {
+              // Store the token in localStorage
+              localStorage.setItem("email", data.email);
+              localStorage.setItem("exp", data.exp);
+              localStorage.setItem("token", data.token);
+              // Redirect to the dashboard page
+              window.location.href = "./pages/template.html";
+            } else {
+              // Alert the user with the error message
+              alert(data.message);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            // Alert the user about the error
+            alert(error.message);
+          }
+        });
       });
     </script>
   </body>
