@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"template-manager/entity"
 
@@ -21,6 +22,10 @@ func NewAuth(sess SessionManager) *Auth {
 
 type SessionManager interface {
 	Verify(ctx context.Context, token string) (*entity.Session, error)
+}
+
+var unauthenticatedRoutes = []string{
+	"user",
 }
 
 func (a *Auth) AuthMiddleware(next http.Handler) http.Handler {
@@ -45,23 +50,34 @@ func (a *Auth) AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+func (a *Auth) IsAuthenticated(c *fiber.Ctx) bool {
+	path := c.Path()
+
+	for _, route := range unauthenticatedRoutes {
+		return !strings.Contains(path, route)
+	}
+	return false
+}
+
 func (a *Auth) FiberAuthMiddleware(c *fiber.Ctx) error {
-	// extract token from header
-	token := c.Get("Authorization")
-	if token == "" {
-		return c.SendStatus(http.StatusUnauthorized)
-	}
+	if a.IsAuthenticated(c) {
+		// extract token from header
+		token := c.Get("Authorization")
+		if token == "" {
+			return c.SendStatus(http.StatusUnauthorized)
+		}
 
-	// verify token
-	sess, err := a.sess.Verify(c.Context(), token)
-	if err != nil {
-		return c.SendStatus(http.StatusUnauthorized)
-	}
+		// verify token
+		sess, err := a.sess.Verify(c.Context(), token)
+		if err != nil {
+			return c.SendStatus(http.StatusUnauthorized)
+		}
 
-	// set account id in context
-	ctx := context.WithValue(c.Context(), "account_id", sess.AccountID)
-	c.SetUserContext(ctx)
-	c.Context().SetUserValue("account_id", sess.AccountID)
+		// set account id in context
+		ctx := context.WithValue(c.Context(), "account_id", sess.AccountID)
+		c.SetUserContext(ctx)
+		c.Context().SetUserValue("account_id", sess.AccountID)
+	}
 
 	return c.Next()
 }

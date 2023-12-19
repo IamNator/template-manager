@@ -14,7 +14,7 @@ func NewRepository[T any](db *gorm.DB) *Repository[T] {
 }
 
 func (r *Repository[T]) Create(ctx context.Context, t *T) (*T, error) {
-	if err := r.db.Create(t).Error; err != nil {
+	if err := r.db.WithContext(ctx).Create(t).Error; err != nil {
 		return nil, err
 	}
 	return t, nil
@@ -25,7 +25,7 @@ func (r *Repository[T]) Find(ctx context.Context, conds ...interface{}) ([]*T, e
 		dest []*T
 	)
 
-	if err := r.db.Find(dest, conds...).Error; err != nil {
+	if err := r.db.WithContext(ctx).Find(dest, conds...).Error; err != nil {
 		return nil, err
 	}
 	return dest, nil
@@ -35,7 +35,7 @@ func (r *Repository[T]) Get(ctx context.Context, conds ...interface{}) (*T, erro
 	var (
 		dest *T
 	)
-	if err := r.db.First(dest, conds...).Error; err != nil {
+	if err := r.db.WithContext(ctx).First(dest, conds...).Error; err != nil {
 		return nil, err
 	}
 	return dest, nil
@@ -45,14 +45,14 @@ func (r *Repository[T]) Update(ctx context.Context, column string, value interfa
 	var (
 		dest *T
 	)
-	if err := r.db.Update(column, value).Find(dest).Error; err != nil {
+	if err := r.db.WithContext(ctx).Update(column, value).Find(dest).Error; err != nil {
 		return nil, err
 	}
 	return dest, nil
 }
 
 func (r *Repository[T]) Delete(ctx context.Context, t *T) error {
-	if err := r.db.Delete(t).Error; err != nil {
+	if err := r.db.WithContext(ctx).Delete(t).Error; err != nil {
 		return err
 	}
 	return nil
