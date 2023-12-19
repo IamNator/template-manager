@@ -8,16 +8,16 @@ import (
 	"template-manager/entity"
 )
 
-func (a *App) CreateApiKey(ctx context.Context, req dto.CreateApiKeyRequest) error {
+func (a *App) CreateAccessKey(ctx context.Context, req dto.CreateAccessKeyRequest) error {
 	var key = entity.Key{
 		AccountID: req.AccountID,
-		Name:      req.ApiKeyName,
+		Name:      req.AccessKeyName,
 	}
 
 	if err := key.GenerateKey(); err != nil {
 		return err
 	}
-	if err := a.db.Model(&key).Create(&key).Error; err != nil {
+	if _, err := a.db.KeyRepository.Create(ctx, &key); err != nil {
 		a.logger.ErrorContext(ctx, "failed to create account %+v", err)
 		return err
 	}
@@ -25,21 +25,25 @@ func (a *App) CreateApiKey(ctx context.Context, req dto.CreateApiKeyRequest) err
 	return nil
 }
 
-func (a *App) FindApiKeys(ctx context.Context, accountID string) ([]entity.Key, error) {
-	var keys []entity.Key
-	if err := a.db.Model(&entity.Key{}).Where("id = ?", accountID).Find(&keys).Error; err != nil {
-		return nil, errors.New("account does not exist")
+func (a *App) ListAccessKeys(ctx context.Context, req dto.ListAccessKeysRequest) ([]*entity.Key, error) {
+	var (
+		keys []*entity.Key
+		err  error
+	)
+	if keys, err = a.db.KeyRepository.Find(ctx, "id = ?", req.AccountID); err != nil {
+		return nil, errors.New("couldn't find matching keys: " + err.Error())
 	}
 	return keys, nil
 }
 
-func (a *App) DeleteApiKey(ctx context.Context, req dto.DeleteApiKeyRequest) error {
+func (a *App) DeleteAccessKey(ctx context.Context, req dto.DeleteAccessKeyRequest) error {
 	var key = entity.Key{
-		ID:        req.ApiKeyID,
 		AccountID: req.AccountID,
+		ID:        req.AccessKeyID,
 	}
-	if err := a.db.Model(&key).Where(&key).Delete(&key).Error; err != nil {
-		return errors.New("account does not exist")
+	if err := a.db.KeyRepository.Delete(ctx, &key); err != nil {
+		return errors.New("problem deleting key: " + err.Error())
 	}
+
 	return nil
 }

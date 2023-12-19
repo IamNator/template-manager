@@ -4,8 +4,7 @@ import (
 	"context"
 	"errors"
 	"log/slog"
-
-	"gorm.io/gorm"
+	"template-manager/repository"
 
 	"template-manager/config"
 	"template-manager/dto"
@@ -28,11 +27,11 @@ type App struct {
 	config *config.Config
 	email  email.Provider
 	logger *slog.Logger
-	db     *gorm.DB // TODO: replace with repository
+	db     *repository.Container // TODO: replace with repository
 	sess   SessionManager
 }
 
-func New(config *config.Config, email email.Provider, logger *slog.Logger, db *gorm.DB, sessionManager SessionManager) *App {
+func New(config *config.Config, email email.Provider, logger *slog.Logger, db *repository.Container, sessionManager SessionManager) *App {
 	return &App{
 		config: config,
 		email:  email,
@@ -55,10 +54,11 @@ func (a *App) Signup(ctx context.Context, req dto.SignUpRequest) error {
 	}
 
 	// find existing account
-	if err := a.db.Model(&acc).Where("email = ?", req.Email).First(&acc).Error; err == nil {
+	if _, err := a.db.AuthRepository.Get(ctx, "email = ?", req.Email); err == nil {
 		return errors.New("account already exists")
 	}
-	if err := a.db.Model(&acc).Create(&acc).Error; err != nil {
+
+	if _, err := a.db.AuthRepository.Create(ctx, &acc); err != nil {
 		a.logger.ErrorContext(ctx, "failed to create account %+v", err)
 		return err
 	}
@@ -86,7 +86,7 @@ func (a *App) Login(ctx context.Context, req dto.LoginRequest) (*dto.LoginRespon
 	var acc = entity.Account{
 		Email: req.Email,
 	}
-	if err := a.db.Model(&acc).Where("email = ?", req.Email).First(&acc).Error; err != nil {
+	if _, err := a.db.AuthRepository.Get(ctx, "email = ?", acc.Email); err != nil {
 		a.logger.InfoContext(ctx, "failed to find account %+v", err)
 		return nil, errors.New(LoginFailed)
 	}
@@ -115,10 +115,12 @@ func (a *App) Logout(ctx context.Context, req dto.LogoutRequest) error {
 }
 
 func (a *App) InitiateResetPassword(ctx context.Context, req dto.InitiateResetPasswordRequest) error {
-	var acc = entity.Account{
-		Email: req.Email,
-	}
-	if err := a.db.Model(&acc).Where("email = ?", req.Email).First(&acc).Error; err != nil {
+	var (
+		acc *entity.Account
+		err error
+	)
+
+	if acc, err = a.db.AuthRepository.Get(ctx, "email = ?", req.Email); err != nil {
 		return errors.New("account does not exist")
 	}
 

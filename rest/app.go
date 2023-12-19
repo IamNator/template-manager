@@ -2,7 +2,6 @@ package rest
 
 import (
 	"github.com/gofiber/fiber/v2"
-
 	"template-manager/app"
 	"template-manager/config"
 )

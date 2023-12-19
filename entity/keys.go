@@ -33,6 +33,7 @@ func (k *Key) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
+// I'm not comfortable with this method of generating keys
 func (k *Key) GenerateKey() error {
 	k.Public = "public-" + time.Now().Format("20060102150405MonMSTJan") + string(uuid.New().NodeID())
 	k.Private = "private-" + time.Now().Format("20060102150405MSTJan") + string(uuid.New().NodeID())

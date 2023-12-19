@@ -9,9 +9,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type SessionManager interface {
-	Verify(ctx context.Context, token string) (*entity.Session, error)
-}
 type Auth struct {
 	sess SessionManager
 }
@@ -20,6 +17,10 @@ func NewAuth(sess SessionManager) *Auth {
 	return &Auth{
 		sess: sess,
 	}
+}
+
+type SessionManager interface {
+	Verify(ctx context.Context, token string) (*entity.Session, error)
 }
 
 func (a *Auth) AuthMiddleware(next http.Handler) http.Handler {

@@ -9,6 +9,7 @@ import (
 	"template-manager/database"
 	"template-manager/email/mailjet"
 	"template-manager/entity"
+	"template-manager/repository"
 	"template-manager/rest/middleware"
 
 	"template-manager/app"
@@ -45,7 +46,9 @@ func main() {
 	sessionManager := session.New(db.Client, conf, logger)
 	midware := middleware.NewAuth(sessionManager)
 
-	application := app.New(conf, mj, logger, db.Client, sessionManager)
+	repo := repository.NewRepositoryContainer(db)
+
+	application := app.New(conf, mj, logger, repo, sessionManager)
 
 	if server == "grpc" {
 		grpcApp := grpc.New(conf)
