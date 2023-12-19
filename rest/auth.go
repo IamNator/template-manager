@@ -6,24 +6,18 @@ import (
 	"template-manager/dto"
 )
 
-func (s server) Signup(c *fiber.Ctx) error {
+func (s *server) Signup(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	var request dto.SignUpRequest
 	err := c.BodyParser(&request)
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
+		return HandleError(c, err)
 	}
 
 	err = s.app.Signup(ctx, request)
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
+		return HandleError(c, err)
 	}
 
 	return c.JSON(fiber.Map{
@@ -32,7 +26,7 @@ func (s server) Signup(c *fiber.Ctx) error {
 	})
 }
 
-func (s server) Login(c *fiber.Ctx) error {
+func (s *server) Login(c *fiber.Ctx) error {
 	var request dto.LoginRequest
 	err := c.BodyParser(&request)
 	if err != nil {
@@ -41,10 +35,7 @@ func (s server) Login(c *fiber.Ctx) error {
 
 	response, err := s.app.Login(c.Context(), request)
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"success": false,
-			"message": err.Error(),
-		})
+		return HandleError(c, err)
 	}
 	return c.JSON(fiber.Map{
 		"success": true,
@@ -53,7 +44,7 @@ func (s server) Login(c *fiber.Ctx) error {
 	})
 }
 
-func (s server) Logout(c *fiber.Ctx) error {
+func (s *server) Logout(c *fiber.Ctx) error {
 	var request dto.LogoutRequest
 	err := c.BodyParser(&request)
 	if err != nil {
@@ -64,6 +55,7 @@ func (s server) Logout(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+
 	return c.JSON(fiber.Map{
 		"message": "successfully logged out",
 	})

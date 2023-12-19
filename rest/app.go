@@ -49,10 +49,10 @@ func (s server) Listen(port string) error {
 	app.Delete("/api/key/:id", s.DeleteKey)
 
 	// Define API endpoints for managing templates
-	app.Post("/api/template", addTemplate)
-	app.Get("/api/template", getTemplate)
-	app.Delete("/api/template/:id", deleteTemplate)
-	app.Put("/api/template/:id", updateTemplate)
+	app.Post("/api/template", s.AddTemplate)
+	app.Get("/api/template", s.GetTemplate)
+	app.Delete("/api/template/:id", s.DeleteTemplate)
+	app.Put("/api/template/:id", s.DeleteTemplate)
 
 	// Start the server on port 8080
 	return app.Listen(port)
@@ -69,5 +69,12 @@ func stats(c *fiber.Ctx) error {
 		"grpc":    true,
 		"version": "v1.0.0",
 		"open":    false, // open source version
+	})
+}
+
+func HandleError(c *fiber.Ctx, err error) error {
+	return c.JSON(fiber.Map{
+		"success": false,
+		"message": err.Error(),
 	})
 }

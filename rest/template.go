@@ -2,25 +2,25 @@ package rest
 
 import "github.com/gofiber/fiber/v2"
 
-func addTemplate(c *fiber.Ctx) error {
+func (s *server) AddTemplate(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
 }
 
-func getTemplate(c *fiber.Ctx) error {
+func (s *server) GetTemplate(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
 }
 
-func deleteTemplate(c *fiber.Ctx) error {
+func (s *server) UpdateTemplate(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
 }
 
-func updateTemplate(c *fiber.Ctx) error {
+func (s *server) DeleteTemplate(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"message": "pong",
 	})
